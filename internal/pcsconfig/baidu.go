@@ -67,8 +67,15 @@ func (baidu *Baidu) BaiduPCS() *baidupcs.BaiduPCS {
 
 // GetSavePath 根据提供的网盘文件路径 pcspath, 返回本地储存路径,
 // 返回绝对路径, 获取绝对路径出错时才返回相对路径...
+//
+// 默认在 savedir 下按账号再分一层 <uid>_<用户名> 目录;
+// 设置 config set -no_user_dir true 可去掉这一层, 直接保存到 savedir。
 func (baidu *Baidu) GetSavePath(pcspath string) string {
-	dirStr := filepath.Join(Config.SaveDir, fmt.Sprintf("%d_%s", baidu.UID, converter.TrimPathInvalidChars(baidu.Name)), pcspath)
+	userDir := ""
+	if !Config.NoUserDir {
+		userDir = fmt.Sprintf("%d_%s", baidu.UID, converter.TrimPathInvalidChars(baidu.Name))
+	}
+	dirStr := filepath.Join(Config.SaveDir, userDir, pcspath)
 	dir, err := filepath.Abs(dirStr)
 	if err != nil {
 		dir = filepath.Clean(dirStr)

@@ -1043,6 +1043,11 @@ func main() {
 	或者
 	BaiduPCS-Go config set -savedir D:/Downloads
 
+	下载的文件默认保存在 <savedir>/<uid>_<用户名>/ 下.
+	如果想直接保存到 savedir (不再添加 <uid>_<用户名> 这一层目录), 执行:
+	BaiduPCS-Go config set -no_user_dir true
+	也可以临时用 -saveto <目录> 指定保存目录.
+
 	下载 /我的资源/1.mp4
 	BaiduPCS-Go d /我的资源/1.mp4
 
@@ -1866,6 +1871,9 @@ func main() {
 						if c.IsSet("savedir") {
 							pcsconfig.Config.SaveDir = c.String("savedir")
 						}
+						if c.IsSet("no_user_dir") {
+							pcsconfig.Config.SetNoUserDir(c.Bool("no_user_dir"))
+						}
 						if c.IsSet("proxy") {
 							pcsconfig.Config.SetProxy(c.String("proxy"))
 						}
@@ -1923,6 +1931,10 @@ func main() {
 						cli.StringFlag{
 							Name:  "savedir",
 							Usage: "下载文件的储存目录",
+						},
+						cli.BoolFlag{
+							Name:  "no_user_dir",
+							Usage: "下载直接保存到 savedir, 不再自动添加 <uid>_<用户名> 子目录",
 						},
 						cli.BoolFlag{
 							Name:  "enable_https",

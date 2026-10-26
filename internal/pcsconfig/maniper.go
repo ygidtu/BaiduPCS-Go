@@ -264,6 +264,11 @@ func (c *PCSConfig) SetIgnoreIllegal(ignore bool) {
 	c.IgnoreIllegal = ignore
 }
 
+// SetNoUserDir 设置下载是否跳过 <uid>_<用户名> 子目录, 直接保存到 savedir
+func (c *PCSConfig) SetNoUserDir(noUserDir bool) {
+	c.NoUserDir = noUserDir
+}
+
 // SetForceLogin 设置强制登录
 func (c *PCSConfig) SetForceLogin(username string) {
 	c.ForceLogin = username

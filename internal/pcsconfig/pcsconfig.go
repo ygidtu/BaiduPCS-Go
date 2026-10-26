@@ -51,6 +51,7 @@ type PCSConfig struct {
 	PCSAddr        string `json:"pcs_addr"`             // PCS服务器域名
 	PanUA          string `json:"pan_ua"`               // PAN浏览器标识
 	SaveDir        string `json:"savedir"`              // 下载储存路径
+	NoUserDir      bool   `json:"no_user_dir"`          // 下载直接保存到 savedir, 不再自动加 <uid>_<用户名> 子目录
 	EnableHTTPS    bool   `json:"enable_https"`         // 启用https
 	FixPCSAddr     bool   `json:"fix_pcs_addr"`         //上传不使用动态PCS服务器域名
 	ForceLogin     string `json:"force_login_username"` // 强制登录
@@ -247,6 +248,7 @@ func (c *PCSConfig) InitDefaultConfig() {
 	c.IgnoreIllegal = true
 	c.ForceLogin = ""
 	c.EnableHTTPS = true
+	c.NoUserDir = false
 
 	// 设置默认的下载路径
 	switch runtime.GOOS {

@@ -75,6 +75,7 @@ func (c *PCSConfig) PrintTable() {
 		[]string{"max_upload_rate", showMaxRate(c.MaxUploadRate), "", "限制最大上传速度, 0代表不限制"},
 		[]string{"max_upload_load", strconv.Itoa(c.MaxUploadLoad), "1 ~ 4", "同时进行上传文件的最大数量"},
 		[]string{"savedir", c.SaveDir, "", "下载文件的储存目录"},
+		[]string{"no_user_dir", fmt.Sprint(c.NoUserDir), "false", "为 true 时下载直接保存到 savedir, 不再自动添加 <uid>_<用户名> 子目录"},
 		[]string{"enable_https", fmt.Sprint(c.EnableHTTPS), "true", "启用 https"},
 		[]string{"force_login_username", fmt.Sprint(c.ForceLogin), "留空", "强制登录指定用户名, 适用于tieba用户信息接口不可用的情况, 如登录正常请留空"},
 		[]string{"ignore_illegal", fmt.Sprint(c.IgnoreIllegal), "false", "关闭上传文件的文件名非法字符检查"},
