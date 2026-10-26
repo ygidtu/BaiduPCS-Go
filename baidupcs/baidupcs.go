@@ -148,7 +148,8 @@ type (
 		isSetPanUA  bool
 		fixPCSAddr  bool
 		ph          *panhome.PanHome
-		cacheOpMap  cachemap.CacheOpMap
+		// cacheOpMap 内含 sync.Map, 不可按值拷贝, 故用指针在副本之间共享
+		cacheOpMap *cachemap.CacheOpMap
 	}
 
 	userInfoJSON struct {
@@ -264,9 +265,20 @@ func (pcs *BaiduPCS) lazyInit() {
 	if pcs.ph == nil {
 		pcs.ph = panhome.NewPanHome(pcs.client)
 	}
+	if pcs.cacheOpMap == nil {
+		pcs.cacheOpMap = &cachemap.CacheOpMap{}
+	}
 	if !pcs.isSetPanUA {
 		pcs.panUA = NetdiskUA
 	}
+}
+
+// cacheMap 返回(懒初始化的)共享缓存池
+func (pcs *BaiduPCS) cacheMap() *cachemap.CacheOpMap {
+	if pcs.cacheOpMap == nil {
+		pcs.lazyInit()
+	}
+	return pcs.cacheOpMap
 }
 
 // GetClient 获取当前的http client
@@ -367,7 +379,9 @@ func (pcs *BaiduPCS) SetPCSAddr(addr string) {
 	}
 }
 
+// CopyPCS 复制一份 PCS 配置, http client / 缓存池 与原件共享
 func (pcs *BaiduPCS) CopyPCS() *BaiduPCS {
+	pcs.lazyInit()
 	return &BaiduPCS{
 		appID:       pcs.appID,
 		isHTTPS:     pcs.isHTTPS,
